@@ -42,32 +42,34 @@ class Hero(animate.Animate):
 
     def update(self):
 
+        if self.window.game:
+            self.time_left-=0.15
+            if self.time_left<0:
+                self.time_left =0
+            if self.time_left>0:
+                self.costume_change()
+                if self.delay_direction==1:
+                    self.to_left()
+                elif self.delay_direction==2:
+                    self.to_right()
+                elif self.delay_direction==3:
+                    self.to_up()
+                elif self.delay_direction==4:
+                    self.to_down()
 
-        self.time_left-=0.15
-        if self.time_left<0:
-            self.time_left =0
-        if self.time_left>0:
-            self.costume_change()
-            if self.delay_direction==1:
-                self.to_left()
-            elif self.delay_direction==2:
-                self.to_right()
-            elif self.delay_direction==3:
-                self.to_up()
-            elif self.delay_direction==4:
-                self.to_down()
+            self.center_x += self.change_x
+            self.center_y += self.change_y
+            if self.left < 0 and self.direction == 1 or  self.right > SCREEN_WIDTH and self.direction == 2 or self.bottom < 0 and self.direction == 4 or self.top > SCREEN_HEIGHT and self.direction == 3:
+                self.window.game = False
+                self.window.timer = 1
+            self.collisions(self.window.solid_blocks)
+            self.collisions(self.window.explodable_blocks)
+            #print(self.window.finishSprite.center_x)
 
-        self.center_x += self.change_x
-        self.center_y += self.change_y
-        if self.left < 0 and self.direction == 1 or  self.right > SCREEN_WIDTH and self.direction == 2 or self.bottom < 0 and self.direction == 4 or self.top > SCREEN_HEIGHT and self.direction == 3:
-            self.window.game = False
-            self.window.timer = 1
-        self.collisions(self.window.solid_blocks)
-        self.collisions(self.window.explodable_blocks)
-        if arcade.check_for_collision(self, self.window.finishSprite):
-            self.window.timer = 2
-            self.won = True
-            self.window.game = False
+            if arcade.check_for_collision(self, self.window.finishSprite):    ########################## PIZDEC
+                self.window.timer = 2
+                self.won = True
+                self.window.game = False
 
     def to_up(self):
         if not self.motion:
@@ -121,7 +123,7 @@ class Hero(animate.Animate):
                     elif self.direction == 1 and self.left < block.right:
                         self.left = block.right
                     self.to_stop()
-                    self.center_y = justify_y(self.center_y, self.window.cell_height)
-                    self.center_x = justify_x(self.center_x, self.window.cell_width)
+                    self.center_y = justify_y(self.center_y, self.window.cell_height, self.window.row_count)
+                    self.center_x = justify_x(self.center_x, self.window.cell_width, self.window.column_count)
                 else:
                     block.kill()

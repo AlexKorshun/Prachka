@@ -17,7 +17,13 @@ if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 class Game(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title, fullscreen=False)
+        self.engine = all_maps.Engine()
+        self.engine.generateTheWay()
         self.scale_of_map = 1
+
+        for i in self.engine.map:
+            print(i)
+
         self.column_count = COLUMN_COUNT
         self.row_count = ROW_COUNT
         self.indent = 0
@@ -34,30 +40,21 @@ class Game(arcade.Window):
         self.cell_width = CELL_WIDTH
         self.cell_height = CELL_HEIGHT
 
-
-
         # инициализация спрайтов
 
-        self.current_map = 0    #len(all_maps.maps)-1
+        self.current_map = 0
+        #self.current_map = len(all_maps.maps)-1            ###CHANGE MAP
         self.setup()
 
     def setup(self):
-
         self.hero.won = False
         user_x = 0
         user_y = 0
         self.scale_of_map = 13.36/(len(all_maps.maps[self.current_map][0]))
-
-
-
         self.row_count = len(all_maps.maps[self.current_map])
         self.column_count = len(all_maps.maps[self.current_map][0])
-
         self.cell_width = CELL_WIDTH * self.scale_of_map
         self.cell_height = CELL_HEIGHT * self.scale_of_map
-
-
-
         self.hero.change_scale(self.scale_of_map)
         for y in range(self.row_count):
             for x in range(self.column_count):
@@ -66,8 +63,10 @@ class Game(arcade.Window):
                     user_y = y
                 elif maps[self.current_map][self.row_count - y - 1][x] == 7:
                     self.finishSprite = finishClass.FnishBlock(self.scale_of_map)
-                    self.finishSprite.set_position(justify_x(difference(x, self.cell_width), self.cell_width),
-                                                   justify_y(difference(y, self.cell_height), self.cell_height))
+                    self.finishSprite.set_position(justify_x(difference(x, self.cell_width), self.cell_width, self.column_count),
+                                                   justify_y(difference(y, self.cell_height), self.cell_height, self.row_count))
+
+
                 elif maps[self.current_map][self.row_count - y - 1][x] == 1:
                     solid_block = solidBlock.SolidBlock(self.scale_of_map)
                     solid_block.center_x = difference(x, self.cell_width)
@@ -79,8 +78,8 @@ class Game(arcade.Window):
                     exp_block.center_y = difference(y, self.cell_height)
                     self.explodable_blocks.append(exp_block)
 
-        x = justify_x(difference(user_x, self.cell_width), self.cell_width)
-        y = justify_y(difference(user_y, self.cell_height), self.cell_height)
+        x = justify_x(difference(user_x, self.cell_width), self.cell_width, self.column_count)
+        y = justify_y(difference(user_y, self.cell_height), self.cell_height, self.row_count)
         self.hero.set_position(x, y)
 
 
