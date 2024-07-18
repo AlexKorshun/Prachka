@@ -1,4 +1,5 @@
 import random
+import sys
 class Engine():
     stop_tunneler = False
     def coinfliper(self):                                                                       #random range generation
@@ -8,6 +9,7 @@ class Engine():
             return random.randint(2,self.rows//2)
 
     def generateTheWay(self):
+        sys.setrecursionlimit(1000000)
         self.stop_tunneler = True
         #the turning control field
         for y in range(self.rows):
@@ -40,11 +42,11 @@ class Engine():
                     if self.map[currentPoint[0]+1][currentPoint[1]]==99:
                         self.map[currentPoint[0]][currentPoint[1]] = 6
                         if stoper < 10:
+                            print("мало поворотов")
                             self.generateTheWay()
                             return
-                        self.checker()
-                        self.cleanTheWay()
-                        return
+                        else:
+                            break
                     elif self.map[currentPoint[0]][currentPoint[1]+1]!=99 and self.map[currentPoint[0]][currentPoint[1]+1]!=0 and self.map[currentPoint[0]][currentPoint[1]-1]!=99 and self.map[currentPoint[0]][currentPoint[1]-1]!=0 or self.map[currentPoint[0]][currentPoint[1]-1]==99 and self.map[currentPoint[0]][currentPoint[1]+1]==99:
                         if self.map[currentPoint[0]][currentPoint[1]]==12:
                             self.map[currentPoint[0]][currentPoint[1]] = 10
@@ -92,11 +94,11 @@ class Engine():
                     if self.map[currentPoint[0]-1][currentPoint[1]]==99:
                         self.map[currentPoint[0]][currentPoint[1]] = 6
                         if stoper < 10:
+                            print("мало поворотов")
                             self.generateTheWay()
                             return
-                        self.checker()
-                        self.cleanTheWay()
-                        return
+                        else:
+                            break
                     elif self.map[currentPoint[0]][currentPoint[1]+1]!=99 and self.map[currentPoint[0]][currentPoint[1]+1]!=0 and self.map[currentPoint[0]][currentPoint[1]-1]!=99 and self.map[currentPoint[0]][currentPoint[1]-1]!=0 or self.map[currentPoint[0]][currentPoint[1]-1]==99 and self.map[currentPoint[0]][currentPoint[1]+1]==99:
                         if self.map[currentPoint[0]][currentPoint[1]]==12:
                             self.map[currentPoint[0]][currentPoint[1]] = 10
@@ -146,11 +148,11 @@ class Engine():
                     if self.map[currentPoint[0]][currentPoint[1]-1] == 99:
                         self.map[currentPoint[0]][currentPoint[1]] = 6
                         if stoper < 10:
+                            print("мало поворотов")
                             self.generateTheWay()
                             return
-                        self.checker()
-                        self.cleanTheWay()
-                        return
+                        else:
+                            break
                     elif self.map[currentPoint[0]+ 1][currentPoint[1] ] != 99 and self.map[currentPoint[0]+ 1][currentPoint[1] ] != 0 and self.map[currentPoint[0]- 1][currentPoint[1] ] != 99 and self.map[currentPoint[0]- 1][currentPoint[1] ] != 0 or self.map[currentPoint[0]- 1][currentPoint[1] ] == 99 and self.map[currentPoint[0]+ 1][currentPoint[1]] == 99:
                         if self.map[currentPoint[0]][currentPoint[1]] == 12:
                             self.map[currentPoint[0]][currentPoint[1]] = 11
@@ -202,10 +204,11 @@ class Engine():
                     if self.map[currentPoint[0]][currentPoint[1] + 1] == 99:
                         self.map[currentPoint[0]][currentPoint[1]] = 6
                         if stoper < 10:
+                            print("мало поворотов")
                             self.generateTheWay()
-                        self.checker()
-                        self.cleanTheWay()
-                        return
+                            return
+                        else:
+                            break
                     elif self.map[currentPoint[0] + 1][currentPoint[1]] != 99 and self.map[currentPoint[0] + 1][currentPoint[1]] != 0 and self.map[currentPoint[0] - 1][currentPoint[1]] != 99 and self.map[currentPoint[0] - 1][currentPoint[1]] != 0 or self.map[currentPoint[0] - 1][currentPoint[1]] == 99 and self.map[currentPoint[0] + 1][currentPoint[1]] == 99:
                         if self.map[currentPoint[0]][currentPoint[1]] == 12:
                             self.map[currentPoint[0]][currentPoint[1]] = 11
@@ -229,39 +232,42 @@ class Engine():
                         if self.direction == 3:
                             if self.map[currentPoint[0]-1][currentPoint[1]] != 0:
                                 self.generateTheWay()
-                                break
+                                return
 
                             self.map[currentPoint[0] - 1][currentPoint[1]] = 99
                         else:
                             if self.map[currentPoint[0]+1][currentPoint[1]] != 0:
                                 self.generateTheWay()
-                                break
+                                return
                             self.map[currentPoint[0] + 1][currentPoint[1]] = 99
         self.checker()
+        print("вызвал Клинер")
         self.cleanTheWay()
 
 
     def checker(self):
         we_have_7 = False
+        we_have_6 = False
         for y in range(self.rows):
             for x in range(self.columns):
                 if self.map[y][x] == 7:
                     we_have_7 = True
-                    break
+                if self.map[y][x] == 6:
+                    we_have_6 = True
             if we_have_7:
                 break
-        if not we_have_7:
-            print("нет 7")
+        if not we_have_7 or not we_have_6:
+            print("нет 6 или 7")
             self.generateTheWay()
 
 
     def cleanTheWay(self):
+        print ("НОВАЯ ГЕНЕРАЦИЯ")
 
         for y in range(self.rows):
             for x in range(self.columns):
-                print(self.map[y][x], end = ' ')
-            print()
-        print()
+                if self.map[y][x]==0 and random.randint(1,5)==1:
+                    self.map[y][x] = 99
 
         for y in range(self.rows):
             for x in range(self.columns):
@@ -269,89 +275,108 @@ class Engine():
                     self.map[y][x] = 1
                 elif self.map[y][x]!=6 and self.map[y][x]!=7 and self.map[y][x]!= 1:
                     self.map[y][x] = 0
-        currentPoint = [0, 0]
+        starter = [0, 0]
         for y in range(self.rows):
             for x in range(self.columns):
                 if self.map[y][x] == 6:
-                    currentPoint = [y,x]
-                    print(currentPoint)
+                    starter = [y,x]
+                    print(starter)
                     break
+        for y in range(self.rows):
+            for x in range(self.columns):
+                print(self.map[y][x], end = '\t')
+            print()
+        print()
         self.stop_tunneler = False
-
-        self.tunneler(1, currentPoint, 0)
-        self.tunneler(2, currentPoint, 0)
-        self.tunneler(3, currentPoint, 0)
-        self.tunneler(4, currentPoint, 0)
+        #print("СТАРТ ВЛЕВО")
+        self.tunneler(1, starter, 0)
+        self.stop_tunneler = False
+       # print("СТАРТ ВПРАВО")
+        self.tunneler(2, starter, 0)
+        self.stop_tunneler = False
+        #print("СТАРТ ВНИЗ")
+        self.tunneler(3, starter, 0)
+        self.stop_tunneler = False
+        #print("СТАРТ ВВЕРХ")
+        self.tunneler(4, starter, 0)
     def tunneler(self, direction, lastpoint, count):
 
 #где останавливался, там больше не останавливается вайб
 
-        if self.stop_tunneler or count > 10:
+        if self.stop_tunneler or count > 8:
             return
-        currentPoint = lastpoint
+        currentPoint = [0,0]
+        currentPoint[0] = lastpoint[0]
+        currentPoint[1] = lastpoint[1]
+
         if direction==1:
-            print("иду влево" + str(currentPoint), end=" ")
+            #print("\nиду влево" + str(currentPoint), end=" ")
             while currentPoint[1]>0 and self.map[currentPoint[0]][currentPoint[1]-1]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[1]-=1
-            print("дошел до " + str(currentPoint))
+            #print("дошел до " + str(currentPoint), end = " ")
             if self.map[currentPoint[0]][currentPoint[1]]==7:
-                for i in self.map:
-                    print(i)
-                print("уебался" + " " + str(count))
+                # for i in self.map:
+                #     print(i)
+                print("\nуебался" + " " + str(count))
                 self.generateTheWay()
                 return
             if currentPoint[1]>0:
-
                 self.tunneler(3,currentPoint, count+1)
                 self.tunneler(4, currentPoint, count+1)
-            return
+                # else:
+        #  print(" ТУПИК", end = " ")
+
+
         elif  direction == 2:
-            print("иду вправо" + str(currentPoint), end = " ")
+            #  print("\nиду вправо" + str(currentPoint), end = " ")
             while currentPoint[1]<self.columns-1 and self.map[currentPoint[0]][currentPoint[1]+1]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[1]+=1
-            print("дошел до " + str(currentPoint))
+            #  print("дошел до " + str(currentPoint), end = " ")
             if self.map[currentPoint[0]][currentPoint[1]]==7:
                 for i in self.map:
                     print(i)
-                print("уебался" + " " + str(count))
+                print("\nуебался" + " " + str(count))
                 self.generateTheWay()
                 return
             if currentPoint[1]<self.columns-1:
                 self.tunneler(3,currentPoint, count+1)
                 self.tunneler(4, currentPoint, count+1)
-            return
+                #  else:
+        #      print(" ТУПИК", end = " ")
         elif direction == 3:
-            print("иду вниз" + str(currentPoint), end = " ")
+            #    print("\nиду вниз" + str(currentPoint), end = " ")
             while currentPoint[0]<self.rows-1 and self.map[currentPoint[0]+1][currentPoint[1]]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[0]+=1
-            print("дошел до " + str(currentPoint))
+            #   print("дошел до " + str(currentPoint), end = " ")
             if self.map[currentPoint[0]][currentPoint[1]]==7:
                 for i in self.map:
                     print(i)
-                print("уебался" + " " + str(count))
+                print("\nуебался" + " " + str(count))
                 self.generateTheWay()
                 return
             if currentPoint[1]<self.rows-1:
                 self.tunneler(1,currentPoint, count+1)
                 self.tunneler(2, currentPoint, count+1)
-            return
+                #  else:
+        #    print(" ТУПИК", end = " ")
 
         elif direction == 4:
-            print("иду вверх" + str(currentPoint), end = " ")
+            #   print("\nиду вверх" + str(currentPoint), end = " ")
             while currentPoint[0]>0 and self.map[currentPoint[0]-1][currentPoint[1]]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[0]-=1
-            print("дошел до " + str(currentPoint))
+            #    print("дошел до " + str(currentPoint), end = " ")
             if self.map[currentPoint[0]][currentPoint[1]]==7:
                 for i in self.map:
                     print(i)
-                print("уебался" + " " + str(count))
+                print("\nуебался" + " " + str(count))
                 self.generateTheWay()
                 return
             if currentPoint[1]>0:
                 self.tunneler(1,currentPoint, count+1)
                 self.tunneler(2, currentPoint, count+1)
-            return
-
+                #else:
+#     print(" ТУПИК", end = " ")
+        return
     def __init__(self):
         self.map = []
         self.columns = random.randint(9, 20)
