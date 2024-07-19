@@ -17,8 +17,8 @@ if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 class Game(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title, fullscreen=False)
-        self.engine = all_maps.Engine()
 
+        self.engine = all_maps.Engine()
         self.engine.generateTheWay()
 
 
@@ -50,6 +50,7 @@ class Game(arcade.Window):
         self.setup()
 
     def setup(self):
+        all_maps.maps[0] = self.engine.map
         self.hero.won = False
         user_x = 0
         user_y = 0
@@ -104,7 +105,12 @@ class Game(arcade.Window):
                         self.timer = 0
                         self.explodable_blocks.clear()
                         self.solid_blocks.clear()
-                        self.current_map+=1
+
+                        self.engine = all_maps.Engine()
+                        self.engine.generateTheWay()
+                        print("перегенерировал")
+
+
                         self.setup()
                         self.hero.to_stop()
                     else:
