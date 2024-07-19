@@ -11,9 +11,10 @@ import finishClass
 from constants import *
 import arcade.gui as gui
 
-records = [0,0,0,0,0,0,0,0,0,0]
+records = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
     os.chdir(sys._MEIPASS)
+
 
 def readingRecords():
     global records
@@ -22,14 +23,17 @@ def readingRecords():
         for i in file:
             records.append(i)
 
+
 class QuitButton(arcade.gui.UIFlatButton):
     def on_click(self, event: arcade.gui.UIOnClickEvent):
         arcade.exit()
+
+
 class Game(arcade.Window):
     def __init__(self, width, height, title):
         self.inputer = False
         super().__init__(width, height, title, fullscreen=False, center_window=True)
-        arcade.play_sound(arcade.load_sound('resources/videoplayback.m4a'), volume=0.02,looping=True)
+        arcade.play_sound(arcade.load_sound('resources/videoplayback.m4a'), volume=0.02, looping=True)
         self.coinSound = arcade.load_sound('resources/smw_coin.wav')
         self.blockSound = arcade.load_sound('resources/smw_jump.wav')
         self.deadSound = arcade.load_sound('resources/smw_blargg.wav')
@@ -44,8 +48,6 @@ class Game(arcade.Window):
         self.current_score = 0
         self.scale_of_map = 1
         all_maps.maps[0] = self.engine.map
-        for i in self.engine.map:
-            print(i)
 
         self.column_count = COLUMN_COUNT
         self.row_count = ROW_COUNT
@@ -66,20 +68,19 @@ class Game(arcade.Window):
         # инициализация спрайтов
 
         self.current_map = 0
-        #self.current_map = len(all_maps.maps)-1            ###CHANGE MAP
+        # self.current_map = len(all_maps.maps)-1            ###CHANGE MAP
         self.setup()
 
     def setup(self):
         if self.game and self.real_game:
             self.finishPlay = True
-            print("сбросил inputer")
-            self.hp-=1
+            self.hp -= 1
             self.current_score = 0
             all_maps.maps[0] = self.engine.map
             self.hero.won = False
             user_x = 0
             user_y = 0
-            self.scale_of_map = 13.36/(len(all_maps.maps[self.current_map][0]))
+            self.scale_of_map = 13.36 / (len(all_maps.maps[self.current_map][0]))
             self.row_count = len(all_maps.maps[self.current_map])
             self.column_count = len(all_maps.maps[self.current_map][0])
             self.cell_width = CELL_WIDTH * self.scale_of_map
@@ -92,8 +93,9 @@ class Game(arcade.Window):
                         user_y = y
                     elif maps[self.current_map][self.row_count - y - 1][x] == 7:
                         self.finishSprite = finishClass.FnishBlock(self.scale_of_map)
-                        self.finishSprite.set_position(justify_x(difference(x, self.cell_width), self.cell_width, self.column_count),
-                                                       justify_y(difference(y, self.cell_height), self.cell_height, self.row_count))
+                        self.finishSprite.set_position(
+                            justify_x(difference(x, self.cell_width), self.cell_width, self.column_count),
+                            justify_y(difference(y, self.cell_height), self.cell_height, self.row_count))
 
 
                     elif maps[self.current_map][self.row_count - y - 1][x] == 1:
@@ -111,12 +113,11 @@ class Game(arcade.Window):
             y = justify_y(difference(user_y, self.cell_height), self.cell_height, self.row_count)
             self.hero.set_position(x, y)
 
-
-
     def on_draw(self):
         self.clear()
         if self.game:
-            arcade.draw_texture_rectangle(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,SCREEN_WIDTH,SCREEN_HEIGHT,arcade.load_texture("resources/background.png"))
+            arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                          arcade.load_texture("resources/background.png"))
 
             self.solid_blocks.draw()
             self.explodable_blocks.draw()
@@ -125,7 +126,7 @@ class Game(arcade.Window):
         else:
             if self.hero.won:
                 if self.timer <= 0:
-                    if self.current_map < len(all_maps.maps)-1:
+                    if self.current_map < len(all_maps.maps) - 1:
                         self.game = True
                         self.timer = 0
                         self.explodable_blocks.clear()
@@ -133,9 +134,8 @@ class Game(arcade.Window):
 
                         self.engine = all_maps.Engine()
                         self.engine.generateTheWay()
-                        self.score+=self.current_score
+                        self.score += self.current_score
                         self.hp = 4
-                        print("перегенерировал")
                         self.setup()
                         self.hero.to_stop()
                     else:
@@ -145,17 +145,19 @@ class Game(arcade.Window):
                     if self.finishPlay:
                         arcade.play_sound(self.finishSound, volume=0.4)
                         self.finishPlay = False
-                    arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH,SCREEN_HEIGHT,arcade.load_texture("resources/win/win.png"))
+                    arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT,
+                                                  arcade.load_texture("resources/win/win.png"))
             else:
                 if self.real_game:
                     arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH,
                                                   SCREEN_HEIGHT, arcade.load_texture("resources/win/lose.png"))
                     arcade.play_sound(self.deadSound, volume=0.2)
-                    #lose
+                    # lose
                 else:
                     arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH,
                                                   SCREEN_HEIGHT, arcade.load_texture("resources/win/lose.png"))
-                    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 500, 450, arcade.color.DARK_BLUE_GRAY)
+                    arcade.draw_rectangle_filled(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 500, 450,
+                                                 arcade.color.DARK_BLUE_GRAY)
 
                 ##########3
                 readingRecords()
@@ -163,17 +165,20 @@ class Game(arcade.Window):
                     arcade.draw_text(records[10 - i], SCREEN_WIDTH * 9 / 11, SCREEN_HEIGHT / 3 + i * 20,
                                      color=(255, 255, 255))
 
-
             if self.end_game:
                 arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT,
                                               arcade.load_texture("resources/win/win.png"))
 
-        arcade.draw_text(str(self.score), 30, SCREEN_HEIGHT-50, color = arcade.color.RED_ORANGE, font_size=24 - int(self.score//100!=0)*8)
-        arcade.draw_text('(+'+str(self.current_score)+")", 70, SCREEN_HEIGHT-50, color = arcade.color.BLUE_GREEN, font_size=24- int(self.score//100!=0)*8)
+        arcade.draw_text(str(self.score), 30, SCREEN_HEIGHT - 50, color=arcade.color.RED_ORANGE,
+                         font_size=24 - int(self.score // 100 != 0) * 8)
+        arcade.draw_text('(+' + str(self.current_score) + ")", 70, SCREEN_HEIGHT - 50, color=arcade.color.BLUE_GREEN,
+                         font_size=24 - int(self.score // 100 != 0) * 8)
         for i in range(self.hp):
-            arcade.draw_texture_rectangle(SCREEN_WIDTH-150+50*i, SCREEN_HEIGHT-50, 50,50,arcade.load_texture("resources/heart.png"))
+            arcade.draw_texture_rectangle(SCREEN_WIDTH - 150 + 50 * i, SCREEN_HEIGHT - 50, 50, 50,
+                                          arcade.load_texture("resources/heart.png"))
 
         self.manager.draw()
+
     def update(self, delta_time):
 
         if self.game:
@@ -199,11 +204,11 @@ class Game(arcade.Window):
                     width=500,
                     height=40,
                     font_size=30,
-                    font_name="Kenney Future",align='center')
+                    font_name="Kenney Future", align='center')
 
                 # Create an text input field
                 self.input_field = gui.UIInputText(
-                    text_color=(255,255,255),
+                    text_color=(255, 255, 255),
                     font_size=24,
                     width=300,
                     text='Enter here...')
@@ -228,17 +233,13 @@ class Game(arcade.Window):
                         anchor_y="center_y",
                         child=self.v_box)
                 )
-                print("вывел поле ввода")
-                self.inputer=True
-
+                self.inputer = True
 
     def update_text(self):
-        print(f"updating the label with input text '{self.input_field.text}'")
         self.name = self.input_field.text
         self.label.text = self.input_field.text
 
     def on_click(self, event):
-        print(f"click-event caught: {event}")
         self.update_text()
         with open('resources/records.txt', 'w'):
             pass
@@ -286,8 +287,6 @@ class Game(arcade.Window):
         self.current_score = 0
         self.scale_of_map = 1
         all_maps.maps[0] = self.engine.map
-        for i in self.engine.map:
-            print(i)
 
         self.column_count = COLUMN_COUNT
         self.row_count = ROW_COUNT
@@ -310,9 +309,10 @@ class Game(arcade.Window):
         self.current_map = 0
         # self.current_map = len(all_maps.maps)-1            ###CHANGE MAP
         self.setup()
+
     def on_key_press(self, key, modifiers):
         if key == arcade.key.H:
-           self.restart()
+            self.restart()
         if self.game:
 
             if key == arcade.key.R:

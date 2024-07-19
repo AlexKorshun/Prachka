@@ -2,12 +2,13 @@ import arcade
 import animate
 from constants import *
 
+
 class Hero(animate.Animate):
     def change_scale(self, scale):
         self.scale = scale * 0.5
 
     def __init__(self, speed, window):
-        super().__init__("resources/Bomberman/Front/Bman_F_f00.png", 0.5*window.scale_of_map)
+        super().__init__("resources/Bomberman/Front/Bman_F_f00.png", 0.5 * window.scale_of_map)
         self.walk_down_frames = []
         self.walk_up_frames = []
         self.walk_right_frames = []
@@ -20,7 +21,8 @@ class Hero(animate.Animate):
             self.walk_down_frames.append(arcade.load_texture(f"resources/Bomberman/Front/Bman_F_f0{i}.png"))
             self.walk_up_frames.append(arcade.load_texture(f"resources/Bomberman/Back/Bman_B_f0{i}.png"))
             self.walk_right_frames.append(arcade.load_texture(f"resources/Bomberman/Side/Bman_S_f0{i}.png"))
-            self.walk_left_frames.append(arcade.load_texture(f"resources/Bomberman/Side/Bman_S_f0{i}.png", flipped_horizontally=True))
+            self.walk_left_frames.append(
+                arcade.load_texture(f"resources/Bomberman/Side/Bman_S_f0{i}.png", flipped_horizontally=True))
             self.stand_down_frames.append(arcade.load_texture(f"resources/Bomberman/Front/Bman_F_f0{0}.png"))
         self.direction = 4
         self.motion = 0
@@ -43,30 +45,30 @@ class Hero(animate.Animate):
     def update(self):
 
         if self.window.game:
-            self.time_left-=0.15
-            if self.time_left<0:
-                self.time_left =0
-            if self.time_left>0:
+            self.time_left -= 0.15
+            if self.time_left < 0:
+                self.time_left = 0
+            if self.time_left > 0:
                 self.costume_change()
-                if self.delay_direction==1:
+                if self.delay_direction == 1:
                     self.to_left()
-                elif self.delay_direction==2:
+                elif self.delay_direction == 2:
                     self.to_right()
-                elif self.delay_direction==3:
+                elif self.delay_direction == 3:
                     self.to_up()
-                elif self.delay_direction==4:
+                elif self.delay_direction == 4:
                     self.to_down()
 
             self.center_x += self.change_x
             self.center_y += self.change_y
-            if self.left < 0 and self.direction == 1 or  self.right > SCREEN_WIDTH and self.direction == 2 or self.bottom < 0 and self.direction == 4 or self.top > SCREEN_HEIGHT and self.direction == 3:
+            if self.left < 0 and self.direction == 1 or self.right > SCREEN_WIDTH and self.direction == 2 or self.bottom < 0 and self.direction == 4 or self.top > SCREEN_HEIGHT and self.direction == 3:
                 self.window.game = False
                 self.window.timer = 1
             self.collisions(self.window.solid_blocks)
             self.collisions(self.window.explodable_blocks)
-            #print(self.window.finishSprite.center_x)
+            # print(self.window.finishSprite.center_x)
 
-            if arcade.check_for_collision(self, self.window.finishSprite):    ########################## PIZDEC
+            if arcade.check_for_collision(self, self.window.finishSprite):  ########################## PIZDEC
                 self.window.timer = 2
                 self.won = True
                 self.window.game = False
@@ -78,7 +80,8 @@ class Hero(animate.Animate):
             self.change_y = self.speed
         elif self.time_left == 0:
             self.delay_direction = 3
-            self.time_left=1
+            self.time_left = 1
+
     def to_down(self):
         if not self.motion:
             self.motion = 1
@@ -87,6 +90,7 @@ class Hero(animate.Animate):
         elif self.time_left == 0:
             self.delay_direction = 4
             self.time_left = 1
+
     def to_left(self):
         if not self.motion:
             self.motion = 1
@@ -95,6 +99,7 @@ class Hero(animate.Animate):
         elif self.time_left == 0:
             self.delay_direction = 1
             self.time_left = 1
+
     def to_right(self):
         if not self.motion:
             self.motion = 1
@@ -103,6 +108,7 @@ class Hero(animate.Animate):
         elif self.time_left == 0:
             self.delay_direction = 2
             self.time_left = 1
+
     def to_stop(self):
         self.change_x = 0
         self.change_y = 0
@@ -113,7 +119,7 @@ class Hero(animate.Animate):
         block_hit = arcade.check_for_collision_with_list(self, spritelist)
         if len(block_hit) > 0:
             for block in block_hit:
-                if block.explodable==False:
+                if block.explodable == False:
                     arcade.play_sound(self.window.blockSound, volume=0.1)
                     if self.direction == 3 and self.top > block.bottom:
                         self.top = block.bottom
