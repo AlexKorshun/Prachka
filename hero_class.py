@@ -127,3 +127,4 @@ class Hero(animate.Animate):
                     self.center_x = justify_x(self.center_x, self.window.cell_width, self.window.column_count)
                 else:
                     block.kill()
+                    self.window.current_score += 1
