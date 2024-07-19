@@ -17,7 +17,27 @@ class Engine():
                 self.map[y][x] = 0
         finishPoint = [random.randint(1, self.rows - 2), random.randint(1, self.columns - 2)]
         self.map[finishPoint[0]][finishPoint[1]] = 7                                              #generate finish point
-        self.direction = random.randint(1, 4)                                         #random direction generation
+        self.direction = random.randint(1, 4)
+
+        if self.direction==1:
+            self.map[finishPoint[0]][finishPoint[1]+1] = 99
+            self.map[finishPoint[0]+1][finishPoint[1]] = 99
+            self.map[finishPoint[0]-1][finishPoint[1]] = 99
+        if self.direction == 2:
+            self.map[finishPoint[0]][finishPoint[1] - 1] = 99
+            self.map[finishPoint[0] + 1][finishPoint[1]] = 99
+            self.map[finishPoint[0] - 1][finishPoint[1]] = 99
+        if self.direction == 3:
+            self.map[finishPoint[0]][finishPoint[1] + 1] = 99
+            self.map[finishPoint[0]][finishPoint[1] - 1] = 99
+            self.map[finishPoint[0] - 1][finishPoint[1]] = 99
+        if self.direction == 4:
+            self.map[finishPoint[0]][finishPoint[1] + 1] = 99
+            self.map[finishPoint[0]][finishPoint[1] - 1] = 99
+            self.map[finishPoint[0] + 1][finishPoint[1]] = 99
+
+
+            #random direction generation
         currentPoint = finishPoint                                                       #variable for the current point
         stoper = 0
                                                 #variable for the count of corners

@@ -17,11 +17,8 @@ if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 class Game(arcade.Window):
     def __init__(self, width, height, title):
         super().__init__(width, height, title, fullscreen=False)
-
         self.engine = all_maps.Engine()
         self.engine.generateTheWay()
-
-
         self.scale_of_map = 1
         all_maps.maps[0] = self.engine.map
         for i in self.engine.map:
