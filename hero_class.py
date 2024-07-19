@@ -114,6 +114,7 @@ class Hero(animate.Animate):
         if len(block_hit) > 0:
             for block in block_hit:
                 if block.explodable==False:
+                    arcade.play_sound(self.window.blockSound, volume=0.1)
                     if self.direction == 3 and self.top > block.bottom:
                         self.top = block.bottom
                     elif self.direction == 4 and self.bottom < block.top:
@@ -128,3 +129,4 @@ class Hero(animate.Animate):
                 else:
                     block.kill()
                     self.window.current_score += 1
+                    arcade.play_sound(self.window.coinSound, volume=0.1)

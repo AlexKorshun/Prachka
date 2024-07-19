@@ -28,7 +28,12 @@ class QuitButton(arcade.gui.UIFlatButton):
 class Game(arcade.Window):
     def __init__(self, width, height, title):
         self.inputer = False
-        super().__init__(width, height, title, fullscreen=False)
+        super().__init__(width, height, title, fullscreen=False, center_window=True)
+        arcade.play_sound(arcade.load_sound('resources/videoplayback.m4a'), volume=0.02,looping=True)
+        self.coinSound = arcade.load_sound('resources/smw_coin.wav')
+        self.blockSound = arcade.load_sound('resources/smw_jump.wav')
+        self.deadSound = arcade.load_sound('resources/smw_blargg.wav')
+        self.finishSound = arcade.load_sound('resources/smw_cape_rise.wav')
         self.engine = all_maps.Engine()
         self.manager = gui.UIManager()
         self.engine.generateTheWay()
@@ -66,7 +71,7 @@ class Game(arcade.Window):
 
     def setup(self):
         if self.game and self.real_game:
-
+            self.finishPlay = True
             print("сбросил inputer")
             self.hp-=1
             self.current_score = 0
@@ -137,11 +142,15 @@ class Game(arcade.Window):
                         self.end_game = True
                 else:
                     self.timer -= 0.1
+                    if self.finishPlay:
+                        arcade.play_sound(self.finishSound, volume=0.4)
+                        self.finishPlay = False
                     arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH,SCREEN_HEIGHT,arcade.load_texture("resources/win/win.png"))
             else:
                 if self.real_game:
                     arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH,
                                                   SCREEN_HEIGHT, arcade.load_texture("resources/win/lose.png"))
+                    arcade.play_sound(self.deadSound, volume=0.2)
                     #lose
                 else:
                     arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH,
@@ -158,10 +167,11 @@ class Game(arcade.Window):
             if self.end_game:
                 arcade.draw_texture_rectangle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH, SCREEN_HEIGHT,
                                               arcade.load_texture("resources/win/win.png"))
+
         arcade.draw_text(str(self.score), 30, SCREEN_HEIGHT-50, color = arcade.color.RED_ORANGE, font_size=24 - int(self.score//100!=0)*8)
         arcade.draw_text('(+'+str(self.current_score)+")", 70, SCREEN_HEIGHT-50, color = arcade.color.BLUE_GREEN, font_size=24- int(self.score//100!=0)*8)
         for i in range(self.hp):
-            arcade.draw_texture_rectangle(SCREEN_WIDTH-200+50*i, SCREEN_HEIGHT-50, 50,50,arcade.load_texture("resources/heart.png"))
+            arcade.draw_texture_rectangle(SCREEN_WIDTH-150+50*i, SCREEN_HEIGHT-50, 50,50,arcade.load_texture("resources/heart.png"))
 
         self.manager.draw()
     def update(self, delta_time):
