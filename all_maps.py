@@ -69,12 +69,14 @@ class Engine():
                         stoper += 1
                         if self.direction==1:
                             if self.map[currentPoint[0]][currentPoint[1] + 1] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
                                 return
 
                             self.map[currentPoint[0]][currentPoint[1] + 1] = 99
                         else:
                             if self.map[currentPoint[0]][currentPoint[1] - 1] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
                                 return
 
@@ -121,12 +123,14 @@ class Engine():
                         stoper += 1
                         if self.direction==1:
                             if self.map[currentPoint[0]][currentPoint[1] + 1] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
                                 return
 
                             self.map[currentPoint[0]][currentPoint[1] + 1] = 99
                         else:
                             if self.map[currentPoint[0]][currentPoint[1] - 1] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
                                 return
 
@@ -177,11 +181,13 @@ class Engine():
                         stoper += 1
                         if self.direction == 3:
                             if self.map[currentPoint[0]-1][currentPoint[1]] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
                                 return
                             self.map[currentPoint[0]- 1][currentPoint[1] ] = 99
                         else:
                             if self.map[currentPoint[0]+1][currentPoint[1]] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
                                 return
                             self.map[currentPoint[0]+ 1][currentPoint[1] ] = 99
@@ -231,13 +237,16 @@ class Engine():
                         stoper += 1
                         if self.direction == 3:
                             if self.map[currentPoint[0]-1][currentPoint[1]] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
                                 return
 
                             self.map[currentPoint[0] - 1][currentPoint[1]] = 99
                         else:
                             if self.map[currentPoint[0]+1][currentPoint[1]] != 0:
+                                print("поствил на путь" + str(self.direction))
                                 self.generateTheWay()
+
                                 return
                             self.map[currentPoint[0] + 1][currentPoint[1]] = 99
         self.checker()
@@ -264,10 +273,19 @@ class Engine():
     def cleanTheWay(self):
         print ("НОВАЯ ГЕНЕРАЦИЯ")
 
+
+        flag = False
         for y in range(self.rows):
             for x in range(self.columns):
-                if self.map[y][x]==0 and random.randint(1,5)==1:
-                    self.map[y][x] = 99
+                if self.map[y][x]==10:
+                    flag = True
+        if flag:
+            for y in range(self.rows):
+                for x in range(self.columns):
+                    if self.map[y][x]==0 and random.randint(1,15)==1:
+                        self.map[y][x] = 99
+        else:
+            print("OLD MAP")
 
         for y in range(self.rows):
             for x in range(self.columns):
@@ -275,13 +293,16 @@ class Engine():
                     self.map[y][x] = 1
                 elif self.map[y][x]!=6 and self.map[y][x]!=7 and self.map[y][x]!= 1:
                     self.map[y][x] = 0
-        starter = [0, 0]
+        starter = [999, 999]
         for y in range(self.rows):
             for x in range(self.columns):
                 if self.map[y][x] == 6:
                     starter = [y,x]
                     print(starter)
                     break
+            if starter!=[999,999]:
+                break
+
         for y in range(self.rows):
             for x in range(self.columns):
                 print(self.map[y][x], end = '\t')
@@ -290,30 +311,29 @@ class Engine():
         self.stop_tunneler = False
         #print("СТАРТ ВЛЕВО")
         self.tunneler(1, starter, 0)
-        self.stop_tunneler = False
        # print("СТАРТ ВПРАВО")
         self.tunneler(2, starter, 0)
-        self.stop_tunneler = False
         #print("СТАРТ ВНИЗ")
         self.tunneler(3, starter, 0)
-        self.stop_tunneler = False
         #print("СТАРТ ВВЕРХ")
         self.tunneler(4, starter, 0)
+        self.stop_tunneler = True
     def tunneler(self, direction, lastpoint, count):
 
 #где останавливался, там больше не останавливается вайб
 
-        if self.stop_tunneler or count > 8:
+        if self.stop_tunneler or count > 10:
             return
+
         currentPoint = [0,0]
         currentPoint[0] = lastpoint[0]
         currentPoint[1] = lastpoint[1]
 
         if direction==1:
-            #print("\nиду влево" + str(currentPoint), end=" ")
+            print("иду влево" + str(currentPoint), end=" ")
             while currentPoint[1]>0 and self.map[currentPoint[0]][currentPoint[1]-1]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[1]-=1
-            #print("дошел до " + str(currentPoint), end = " ")
+            print("дошел до " + str(currentPoint))
             if self.map[currentPoint[0]][currentPoint[1]]==7:
                 # for i in self.map:
                 #     print(i)
@@ -321,17 +341,17 @@ class Engine():
                 self.generateTheWay()
                 return
             if currentPoint[1]>0:
-                self.tunneler(3,currentPoint, count+1)
+                self.tunneler(3, currentPoint, count+1)
                 self.tunneler(4, currentPoint, count+1)
                 # else:
         #  print(" ТУПИК", end = " ")
 
 
         elif  direction == 2:
-            #  print("\nиду вправо" + str(currentPoint), end = " ")
+            print("иду вправо" + str(currentPoint), end = " ")
             while currentPoint[1]<self.columns-1 and self.map[currentPoint[0]][currentPoint[1]+1]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[1]+=1
-            #  print("дошел до " + str(currentPoint), end = " ")
+            print("дошел до " + str(currentPoint))
             if self.map[currentPoint[0]][currentPoint[1]]==7:
                 for i in self.map:
                     print(i)
@@ -344,10 +364,10 @@ class Engine():
                 #  else:
         #      print(" ТУПИК", end = " ")
         elif direction == 3:
-            #    print("\nиду вниз" + str(currentPoint), end = " ")
+            print("иду вниз" + str(currentPoint), end = " ")
             while currentPoint[0]<self.rows-1 and self.map[currentPoint[0]+1][currentPoint[1]]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[0]+=1
-            #   print("дошел до " + str(currentPoint), end = " ")
+            print("дошел до " + str(currentPoint))
             if self.map[currentPoint[0]][currentPoint[1]]==7:
                 for i in self.map:
                     print(i)
@@ -355,16 +375,16 @@ class Engine():
                 self.generateTheWay()
                 return
             if currentPoint[1]<self.rows-1:
-                self.tunneler(1,currentPoint, count+1)
+                self.tunneler(1, currentPoint, count+1)
                 self.tunneler(2, currentPoint, count+1)
                 #  else:
         #    print(" ТУПИК", end = " ")
 
         elif direction == 4:
-            #   print("\nиду вверх" + str(currentPoint), end = " ")
+            print("\nиду вверх" + str(currentPoint), end = " ")
             while currentPoint[0]>0 and self.map[currentPoint[0]-1][currentPoint[1]]!=1 and self.map[currentPoint[0]][currentPoint[1]]!=7:
                 currentPoint[0]-=1
-            #    print("дошел до " + str(currentPoint), end = " ")
+            print("дошел до " + str(currentPoint))
             if self.map[currentPoint[0]][currentPoint[1]]==7:
                 for i in self.map:
                     print(i)
