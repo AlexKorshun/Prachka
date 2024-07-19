@@ -1,16 +1,19 @@
 import random
 import sys
+
+
 class Engine():
     stop_tunneler = False
+
     def coinfliper(self):
         if random.randint(1, 3) == 1:
             return random.randint(2, self.rows)
         else:
             return random.randint(2, self.rows // 2)
+
     def generateTheWay(self):
         sys.setrecursionlimit(1000000)
         self.stop_tunneler = True
-        # the turning control field
         for y in range(self.rows):
             for x in range(self.columns):
                 self.map[y][x] = 0
@@ -39,7 +42,8 @@ class Engine():
         while stoper < 20:
             if self.direction == 4:
                 if currentPoint[0] > 1 and length > 0 and (
-                        self.map[currentPoint[0] - 1][currentPoint[1]] == 10 or self.map[currentPoint[0] - 1][currentPoint[1]] == 0):
+                        self.map[currentPoint[0] - 1][currentPoint[1]] == 10 or self.map[currentPoint[0] - 1][
+                    currentPoint[1]] == 0):
                     if self.map[currentPoint[0]][currentPoint[1]] == 10:
                         self.map[currentPoint[0]][currentPoint[1]] = 12
                     currentPoint[0] -= 1
@@ -66,7 +70,8 @@ class Engine():
                             self.map[currentPoint[0]][currentPoint[1]] = 0
                         currentPoint[0] += 1
                     else:
-                        if self.map[currentPoint[0]][currentPoint[1] - 1] == 99 and self.map[currentPoint[0]][currentPoint[1] + 1] == 0:
+                        if self.map[currentPoint[0]][currentPoint[1] - 1] == 99 and self.map[currentPoint[0]][
+                            currentPoint[1] + 1] == 0:
                             self.direction = 2
                         elif self.map[currentPoint[0]][currentPoint[1] + 1] == 99 and self.map[currentPoint[0]][
                             currentPoint[1] - 1] == 0:
@@ -92,7 +97,8 @@ class Engine():
                             self.map[currentPoint[0]][currentPoint[1] - 1] = 99
             elif self.direction == 3:
                 if currentPoint[0] < self.rows - 2 and length > 0 and (
-                        self.map[currentPoint[0] + 1][currentPoint[1]] == 10 or self.map[currentPoint[0] + 1][currentPoint[1]] == 0):
+                        self.map[currentPoint[0] + 1][currentPoint[1]] == 10 or self.map[currentPoint[0] + 1][
+                    currentPoint[1]] == 0):
                     if self.map[currentPoint[0]][currentPoint[1]] == 10:
                         self.map[currentPoint[0]][currentPoint[1]] = 12
                     currentPoint[0] += 1
@@ -119,7 +125,8 @@ class Engine():
                             self.map[currentPoint[0]][currentPoint[1]] = 0
                         currentPoint[0] -= 1
                     else:
-                        if self.map[currentPoint[0]][currentPoint[1] - 1] == 99 and self.map[currentPoint[0]][currentPoint[1] + 1] == 0:
+                        if self.map[currentPoint[0]][currentPoint[1] - 1] == 99 and self.map[currentPoint[0]][
+                            currentPoint[1] + 1] == 0:
                             self.direction = 2
                         elif self.map[currentPoint[0]][currentPoint[1] + 1] == 99 and self.map[currentPoint[0]][
                             currentPoint[1] - 1] == 0:
@@ -145,7 +152,8 @@ class Engine():
                             self.map[currentPoint[0]][currentPoint[1] - 1] = 99
             elif self.direction == 2:
                 if currentPoint[1] < self.columns - 2 and length > 0 and (
-                        self.map[currentPoint[0]][currentPoint[1] + 1] == 11 or self.map[currentPoint[0]][currentPoint[1] + 1] == 0):
+                        self.map[currentPoint[0]][currentPoint[1] + 1] == 11 or self.map[currentPoint[0]][
+                    currentPoint[1] + 1] == 0):
                     if self.map[currentPoint[0]][currentPoint[1]] == 11:
                         self.map[currentPoint[0]][currentPoint[1]] = 12
                     currentPoint[1] += 1
@@ -172,7 +180,8 @@ class Engine():
                             self.map[currentPoint[0]][currentPoint[1]] = 0
                         currentPoint[1] -= 1
                     else:
-                        if self.map[currentPoint[0] - 1][currentPoint[1]] == 99 and self.map[currentPoint[0] + 1][currentPoint[1]] == 0:
+                        if self.map[currentPoint[0] - 1][currentPoint[1]] == 99 and self.map[currentPoint[0] + 1][
+                            currentPoint[1]] == 0:
                             self.direction = 3
                         elif self.map[currentPoint[0] + 1][currentPoint[1]] == 99 and self.map[currentPoint[0] - 1][
                             currentPoint[1]] == 0:
@@ -198,7 +207,8 @@ class Engine():
                             self.map[currentPoint[0] + 1][currentPoint[1]] = 99
             elif self.direction == 1:
                 if currentPoint[1] > 1 and length > 0 and (
-                        self.map[currentPoint[0]][currentPoint[1] - 1] == 11 or self.map[currentPoint[0]][currentPoint[1] - 1] == 0):
+                        self.map[currentPoint[0]][currentPoint[1] - 1] == 11 or self.map[currentPoint[0]][
+                    currentPoint[1] - 1] == 0):
                     if self.map[currentPoint[0]][currentPoint[1]] == 11:
                         self.map[currentPoint[0]][currentPoint[1]] = 12
                     currentPoint[1] -= 1
@@ -225,7 +235,8 @@ class Engine():
                             self.map[currentPoint[0]][currentPoint[1]] = 0
                         currentPoint[1] += 1
                     else:
-                        if self.map[currentPoint[0] - 1][currentPoint[1]] == 99 and self.map[currentPoint[0] + 1][currentPoint[1]] == 0:
+                        if self.map[currentPoint[0] - 1][currentPoint[1]] == 99 and self.map[currentPoint[0] + 1][
+                            currentPoint[1]] == 0:
                             self.direction = 3
                         elif self.map[currentPoint[0] + 1][currentPoint[1]] == 99 and self.map[currentPoint[0] - 1][
                             currentPoint[1]] == 0:
@@ -251,6 +262,7 @@ class Engine():
                             self.map[currentPoint[0] + 1][currentPoint[1]] = 99
         self.checker()
         self.cleanTheWay()
+
     def checker(self):
         we_have_7 = False
         we_have_6 = False
@@ -264,6 +276,7 @@ class Engine():
                 break
         if not we_have_7 or not we_have_6:
             self.generateTheWay()
+
     def cleanTheWay(self):
         flag = False
         for y in range(self.rows):
@@ -295,6 +308,7 @@ class Engine():
         self.tunneler(3, starter, 0)
         self.tunneler(4, starter, 0)
         self.stop_tunneler = True
+
     def tunneler(self, direction, lastpoint, count):
         if self.stop_tunneler or count > 10:
             return
@@ -342,6 +356,7 @@ class Engine():
                 self.tunneler(1, currentPoint, count + 1)
                 self.tunneler(2, currentPoint, count + 1)
         return
+
     def __init__(self):
         self.map = []
         self.columns = random.randint(9, 20)
@@ -350,6 +365,8 @@ class Engine():
             self.map.append([])
             for x in range(self.columns):
                 self.map[y].append(0)
+
+
 maps = [
     [
         [0, 0, 1, 0, 7, 0, 0, 0],
