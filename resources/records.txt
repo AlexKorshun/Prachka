@@ -1,10 +1,10 @@
 admin:200
 player1:80
 player2:70
+Alex:68
 player3:65
 player4:35
 player5:30
 player6:25
 player7:13
 player8:11
-player9:7
